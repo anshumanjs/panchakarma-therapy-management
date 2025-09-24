@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practitioner Dashboard - Panchakarma Management Software</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>PanchakarmaPro</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="features.html" class="nav-link">Features</a></li>
+                <li><a href="patient-dashboard.html" class="nav-link">Patient Portal</a></li>
+                <li><a href="practitioner-dashboard.html" class="nav-link active">Practitioner Portal</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <section class="dashboard-header">
+        <div class="container">
+            <h1 class="dashboard-title">Practitioner Dashboard</h1>
+            <p class="dashboard-subtitle">Manage your patients, schedule sessions, and track therapy outcomes</p>
+        </div>
+    </section>
+
+    <!-- Dashboard Content -->
+    <section class="dashboard">
+        <div class="container">
+            <!-- Quick Stats -->
+            <div class="practitioner-stats">
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <p class="stat-label">Active Patients</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <p class="stat-label">Sessions Today</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">156</div>
+                    <p class="stat-label">Total Sessions</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.8</div>
+                    <p class="stat-label">Avg. Rating</p>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="main-content-grid">
+                <!-- Patient Management -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="card-title">My Patients</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="patient-list-header">
+                            <input type="text" class="search-input" id="patientSearchInput" placeholder="Search patients...">
+                        </div>
+                        <div class="patient-list" id="patientList">
+                            <!-- Patient items will be loaded here -->
+                            <p style="text-align: center; color: #64748b; padding: 1rem;">Loading patients...</p>
+                        </div>
+                        <div class="text-center" style="padding: 1rem;">
+                            <a href="#" class="btn btn-outline">View All Patients</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Schedule -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <h3 class="card-title">Today's Schedule</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="schedule-container" id="todayAppointments">
+                            <!-- Today's appointments will be loaded here -->
+                            <p style="text-align: center; color: #64748b; padding: 1rem;">Loading schedule...</p>
+                        </div>
+                        <div class="text-center" style="padding: 1rem;">
+                            <a href="#" class="btn btn-outline">View Full Schedule</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Details and Appointments Section (Dynamically loaded) -->
+            <div class="dashboard-card patient-detail-card" id="patientDetailSection" style="display: none;">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-user-injured"></i>
+                    </div>
+                    <h3 class="card-title" id="patientDetailName">Patient Details</h3>
+                    <button class="btn-close" onclick="hidePatientDetail()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="card-content">
+                    <div class="patient-profile-overview">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h4 id="detailPatientName"></h4>
+                            <p><i class="fas fa-envelope"></i> <span id="detailPatientEmail"></span></p>
+                            <p><i class="fas fa-phone"></i> <span id="detailPatientPhone"></span></p>
+                            <p><i class="fas fa-birthday-cake"></i> <span id="detailPatientDOB"></span></p>
+                            <p><i class="fas fa-venus-mars"></i> <span id="detailPatientGender"></span></p>
+                            <p><i class="fas fa-map-marker-alt"></i> <span id="detailPatientAddress"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="patient-tabs">
+                        <button class="tab-btn active" data-tab="medicalHistory">Medical History</button>
+                        <button class="tab-btn" data-tab="appointments">Appointments</button>
+                        <button class="tab-btn" data-tab="progress">Progress & Notes</button>
+                    </div>
+
+                    <div class="tab-content active" id="medicalHistory">
+                        <h3>Medical History</h3>
+                        <div class="detail-section">
+                            <h4>Allergies:</h4>
+                            <p id="detailAllergies"></p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Current Medications:</h4>
+                            <p id="detailMedications"></p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Chronic Conditions:</h4>
+                            <p id="detailConditions"></p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Family History:</h4>
+                            <p id="detailFamilyHistory"></p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="appointments">
+                        <h3>Patient Appointments</h3>
+                        <div class="appointment-list" id="patientAppointmentsList">
+                            <!-- Patient's appointments will be loaded here -->
+                            <p style="text-align: center; color: #64748b; padding: 1rem;">Loading appointments...</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="progress">
+                        <h3>Therapy Progress & Notes</h3>
+                        <div class="progress-section" id="patientProgressSection">
+                            <!-- Progress and notes will be loaded here -->
+                            <p style="text-align: center; color: #64748b; padding: 1rem;">No progress data available.</p>
+                        </div>
+                        <div class="add-improvement-form">
+                            <h4>Add Improvement Mark</h4>
+                            <form id="addImprovementForm">
+                                <input type="hidden" id="improvementPatientId">
+                                <div class="form-group">
+                                    <label for="improvementTitle">Title</label>
+                                    <input type="text" id="improvementTitle" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="improvementDescription">Description</label>
+                                    <textarea id="improvementDescription" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="improvementPercentage">Improvement Percentage (0-100)</label>
+                                    <input type="number" id="improvementPercentage" min="0" max="100" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="measurementType">Measurement Type</label>
+                                    <select id="measurementType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="pain_scale">Pain Scale</option>
+                                        <option value="mobility">Mobility</option>
+                                        <option value="energy_level">Energy Level</option>
+                                        <option value="sleep_quality">Sleep Quality</option>
+                                        <option value="mood">Mood</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="improvementNotes">Practitioner Notes</label>
+                                    <textarea id="improvementNotes" rows="2"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Improvement</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekly Schedule Overview -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <h3 class="card-title">Upcoming Appointments</h3>
+                </div>
+                <div class="card-content">
+                    <div class="schedule-container" id="upcomingAppointments">
+                        <!-- Upcoming appointments will be loaded here -->
+                        <p style="text-align: center; color: #64748b; padding: 1rem;">Loading upcoming appointments...</p>
+                    </div>
+                    <div class="text-center" style="padding: 1rem;">
+                        <a href="#" class="btn btn-outline">View All Appointments</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Feedback & Analytics -->
+            <div class="main-content-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3 class="card-title">Recent Patient Feedback</h3>
+                    </div>
+                    <div class="card-content" id="feedbackList">
+                        <!-- Feedback items will be loaded here -->
+                        <p style="text-align: center; color: #64748b; padding: 1rem;">Loading feedback...</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-card analytics-section">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h3 class="card-title">Therapy Analytics</h3>
+                    </div>
+                    <div class="card-content" id="therapyAnalytics">
+                        <!-- Analytics will be loaded here -->
+                        <p style="text-align: center; color: #64748b; padding: 1rem;">Loading analytics...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-leaf"></i>
+                        <span>PanchakarmaPro</span>
+                    </div>
+                    <p>Modernizing traditional Ayurveda care with cutting-edge technology for better patient outcomes.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="patient-dashboard.html">Patient Portal</a></li>
+                        <li><a href="practitioner-dashboard.html">Practitioner Portal</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> support@panchakarmapro.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PanchakarmaPro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth-guard.js"></script> <!-- Ensure auth-guard is loaded -->
+    <script>
+        let user = null; // Will be populated by auth-guard or API
+        let currentPractitioner = null;
+        let appointments = [];
+        let patients = [];
+        let feedbacks = [];
+        let notifications = [];
+        let selectedPatient = null; // To store the currently selected patient
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async function() {
+            // AuthGuard will handle redirection if not authenticated or not practitioner
+            if (!window.authGuard.checkAuth() || window.authGuard.getUser().role !== 'practitioner') {
+                window.authGuard.redirectToLogin();
+                return;
+            }
+            user = window.authGuard.getUser(); // Get current user from authGuard
+
+            // Update welcome message
+            document.querySelector('.dashboard-title').textContent = `Welcome back, Dr. ${user.firstName}!`;
+            
+            await loadDashboardData();
+            setupEventListeners();
+            setupPatientTabs();
+        });
+
+        async function loadDashboardData() {
+            try {
+                // Load practitioner profile to get assigned patients
+                const practitionerProfileResponse = await window.api.getPractitionerProfile();
+                if (practitionerProfileResponse.success) {
+                    currentPractitioner = practitionerProfileResponse.data.data; // Access data.data
+                    // Update quick stats with actual data
+                    document.querySelector('.practitioner-stats .stat-card:nth-child(1) .stat-number').textContent = currentPractitioner.patients?.length || 0;
+                    document.querySelector('.practitioner-stats .stat-card:nth-child(4) .stat-number').textContent = currentPractitioner.rating?.average.toFixed(1) || '0.0';
+                }
+
+                // Load appointments
+                const appointmentsResponse = await window.api.getPractitionerAppointments({ limit: 20 }); // Increased limit for more appointments
+                if (appointmentsResponse.success) {
+                    appointments = appointmentsResponse.data.appointments;
+                    displayAppointments();
+                    updateStats();
+                }
+
+                // Load patients
+                const patientsResponse = await window.api.getPractitionerPatients({ limit: 10 }); // Increased limit for more patients
+                if (patientsResponse.success) {
+                    patients = patientsResponse.data.patients;
+                    displayPatients();
+                }
+
+                // Load feedbacks
+                const feedbacksResponse = await window.api.getFeedback({ limit: 5, practitionerId: currentPractitioner._id });
+                if (feedbacksResponse.success) {
+                    feedbacks = feedbacksResponse.data.feedback;
+                    displayFeedbacks();
+                }
+
+                // Load notifications
+                const notificationsResponse = await window.api.getNotifications({ limit: 3 });
+                if (notificationsResponse.success) {
+                    notifications = notificationsResponse.data.notifications;
+                    displayNotifications();
+                }
+
+                // Load analytics
+                const analyticsResponse = await window.api.getPractitionerAnalytics();
+                if (analyticsResponse.success) {
+                    loadAnalytics(analyticsResponse.data.data); // Access data.data
+                }
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                window.PanchakarmaPro.showNotification('Failed to load dashboard data', 'error');
+            }
+        }
+
+        function displayAppointments() {
+            const todayAppointments = appointments.filter(apt => {
+                const aptDate = new Date(apt.scheduledDate);
+                const today = new Date();
+                return aptDate.toDateString() === today.toDateString() && apt.status !== 'cancelled';
+            }).sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+            const upcomingAppointments = appointments.filter(apt => {
+                const aptDate = new Date(apt.scheduledDate);
+                const today = new Date();
+                return aptDate > today && apt.status !== 'cancelled';
+            }).sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate)).slice(0, 5);
+
+            // Display today's appointments
+            const todayContainer = document.getElementById('todayAppointments');
+            todayContainer.innerHTML = '';
+            if (todayAppointments.length === 0) {
+                todayContainer.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No appointments today</p>';
+            } else {
+                todayAppointments.forEach(appointment => {
+                    const appointmentElement = document.createElement('div');
+                    appointmentElement.className = 'schedule-item';
+                    appointmentElement.innerHTML = `
+                        <div>
+                            <div class="schedule-time">${appointment.startTime} - ${appointment.endTime}</div>
+                            <div class="schedule-details">${appointment.therapyType} - ${appointment.patient.userId.firstName} ${appointment.patient.userId.lastName}</div>
+                        </div>
+                        <div class="schedule-actions">
+                            <button class="btn-small btn-edit" onclick="updateAppointmentStatus('${appointment._id}', 'in-progress')">Start</button>
+                            <button class="btn-small btn-cancel" onclick="updateAppointmentStatus('${appointment._id}', 'completed')">Complete</button>
+                        </div>
+                    `;
+                    todayContainer.appendChild(appointmentElement);
+                });
+            }
+
+            // Display upcoming appointments
+            const upcomingContainer = document.getElementById('upcomingAppointments');
+            upcomingContainer.innerHTML = '';
+            if (upcomingAppointments.length === 0) {
+                upcomingContainer.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No upcoming appointments</p>';
+            } else {
+                upcomingAppointments.forEach(appointment => {
+                    const appointmentElement = document.createElement('div');
+                    appointmentElement.className = 'schedule-item';
+                    appointmentElement.innerHTML = `
+                        <div>
+                            <div class="schedule-time">${new Date(appointment.scheduledDate).toLocaleDateString()} at ${appointment.startTime}</div>
+                            <div class="schedule-details">${appointment.therapyType} - ${appointment.patient.userId.firstName} ${appointment.patient.userId.lastName}</div>
+                        </div>
+                        <span class="status-badge status-${appointment.status}">${appointment.status}</span>
+                    `;
+                    upcomingContainer.appendChild(appointmentElement);
+                });
+            }
+        }
+
+        function displayPatients() {
+            const container = document.getElementById('patientList');
+            if (!container) {
+                console.error('Patient list container not found');
+                return;
+            }
+
+            const recentPatients = patients.slice(0, 5);
+            container.innerHTML = '';
+
+            if (recentPatients.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No patients found</p>';
+                return;
+            }
+
+            recentPatients.forEach(patient => {
+                const patientElement = document.createElement('div');
+                patientElement.className = 'patient-item';
+                patientElement.dataset.patientId = patient._id; // Store patient ID
+                patientElement.onclick = () => showPatientDetail(patient._id); // Make clickable
+                patientElement.innerHTML = `
+                    <div class="patient-info">
+                        <h4>${patient.userId.firstName} ${patient.userId.lastName}</h4>
+                        <p>${patient.userId.email}</p>
+                    </div>
+                    <span class="patient-status status-active">Active</span>
+                `;
+                container.appendChild(patientElement);
+            });
+        }
+
+        function displayFeedbacks() {
+            const container = document.getElementById('feedbackList');
+            if (!container) {
+                console.error('Feedback list container not found');
+                return;
+            }
+
+            const recentFeedbacks = feedbacks.slice(0, 3);
+            container.innerHTML = '';
+
+            if (recentFeedbacks.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No feedback received</p>';
+                return;
+            }
+
+            container.innerHTML = ''; // Clear existing content
+
+            if (feedbacks.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No feedback received</p>';
+                return;
+            }
+
+            if (feedbacks.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No feedback received</p>';
+                return;
+            }
+
+            feedbacks.forEach(feedback => {
+                const feedbackElement = document.createElement('div');
+                feedbackElement.className = 'feedback-item';
+                feedbackElement.innerHTML = `
+                    <div class="feedback-header">
+                        <h4>${feedback.patient?.userId?.firstName || 'N/A'} ${feedback.patient?.userId?.lastName || ''} - ${feedback.therapyType}</h4>
+                        <div class="rating">
+                            ${'★'.repeat(feedback.rating.overall)}${'☆'.repeat(5 - feedback.rating.overall)}
+                        </div>
+                    </div>
+                    <p>"${feedback.comments}"</p>
+                    <span class="feedback-date">${new Date(feedback.createdAt).toLocaleDateString()}</span>
+                `;
+                container.appendChild(feedbackElement);
+            });
+        }
+
+        function displayNotifications() {
+            // Assuming there's a notifications container in the HTML, if not, this will need adjustment
+            const container = document.getElementById('notificationContainer'); // Placeholder ID
+            if (!container) {
+                console.warn('Notification container not found. Skipping displayNotifications.');
+                return;
+            }
+
+            // Clear existing simulated data
+            const existingNotificationItems = container.querySelectorAll('.notification-item');
+            existingNotificationItems.forEach(item => item.remove());
+
+            if (notifications.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No new notifications</p>';
+                return;
+            }
+
+            container.innerHTML = ''; // Clear existing content
+
+            if (notifications.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No new notifications</p>';
+                return;
+            }
+
+            notifications.forEach(notification => {
+                const notificationElement = document.createElement('div');
+                notificationElement.className = 'notification-item';
+                notificationElement.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="fas fa-${window.PanchakarmaPro.getNotificationIcon(notification.type)}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h4>${notification.title}</h4>
+                        <p>${notification.message}</p>
+                        <div class="notification-time">${window.PanchakarmaPro.formatTimeAgo(notification.createdAt)}</div>
+                    </div>
+                `;
+                container.appendChild(notificationElement);
+            });
+        }
+
+        function updateStats() {
+            const totalAppointments = appointments.length;
+            const todayAppointments = appointments.filter(apt => {
+                const aptDate = new Date(apt.scheduledDate);
+                const today = new Date();
+                return aptDate.toDateString() === today.toDateString();
+            }).length;
+            const completedAppointments = appointments.filter(apt => apt.status === 'completed').length;
+            const totalPatients = patients.length;
+
+            // Update stat numbers in the quick stats section
+            const statCards = document.querySelectorAll('.practitioner-stats .stat-card');
+            if (statCards[0]) statCards[0].querySelector('.stat-number').textContent = totalPatients;
+            if (statCards[1]) statCards[1].querySelector('.stat-number').textContent = todayAppointments;
+            if (statCards[2]) statCards[2].querySelector('.stat-number').textContent = totalAppointments;
+            // Avg. Rating is updated from practitioner profile
+        }
+
+        function loadAnalytics(analyticsData) {
+            const container = document.getElementById('therapyAnalytics');
+            if (!container) {
+                console.error('Therapy analytics container not found');
+                return;
+            }
+
+            container.innerHTML = ''; // Clear existing simulated data
+
+            if (!analyticsData || Object.keys(analyticsData).length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No analytics data available.</p>';
+                return;
+            }
+
+            // Overview
+            const overview = analyticsData.overview;
+            if (overview) {
+                const overviewHtml = `
+                    <div class="analytics-item">
+                        <div class="analytics-label"><span>Total Appointments</span><span class="analytics-value">${overview.totalAppointments}</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-label"><span>Completed Appointments</span><span class="analytics-value">${overview.completedAppointments}</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${overview.completionRate || 0}%;"></div></div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-label"><span>Cancelled Appointments</span><span class="analytics-value">${overview.cancelledAppointments}</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${overview.cancelledAppointments > 0 ? (overview.cancelledAppointments / overview.totalAppointments) * 100 : 0}%;"></div></div>
+                    </div>
+                `;
+                container.innerHTML += overviewHtml;
+            }
+
+            // Therapy Stats
+            if (analyticsData.therapyStats && analyticsData.therapyStats.length > 0) {
+                container.innerHTML += '<h3>Therapy Type Distribution</h3>';
+                analyticsData.therapyStats.forEach(stat => {
+                    const percentage = (stat.count / overview.totalAppointments) * 100;
+                    container.innerHTML += `
+                        <div class="analytics-item">
+                            <div class="analytics-label"><span>${stat._id} Sessions</span><span class="analytics-value">${stat.count}</span></div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: ${percentage}%;"></div></div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Feedback Stats
+            const feedbackStats = analyticsData.feedbackStats;
+            if (feedbackStats) {
+                container.innerHTML += '<h3>Feedback Summary</h3>';
+                container.innerHTML += `
+                    <div class="analytics-item">
+                        <div class="analytics-label"><span>Average Rating</span><span class="analytics-value">${feedbackStats.averageRating ? feedbackStats.averageRating.toFixed(1) : 'N/A'}/5</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${(feedbackStats.averageRating / 5) * 100 || 0}%;"></div></div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-label"><span>Total Feedback</span><span class="analytics-value">${feedbackStats.totalFeedback}</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+                    </div>
+                `;
+            }
+        }
+
+        async function updateAppointmentStatus(appointmentId, status) {
+            try {
+                const response = await window.api.updateAppointmentStatus(appointmentId, status);
+
+                if (response.success) {
+                    window.PanchakarmaPro.showNotification(`Appointment status updated to ${status} successfully`, 'success');
+                    loadDashboardData(); // Refresh data
+                } else {
+                    window.PanchakarmaPro.showNotification(response.message || 'Failed to update appointment status', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating appointment status:', error);
+                window.PanchakarmaPro.showNotification('Failed to update appointment status', 'error');
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('patientSearchInput').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredPatients = patients.filter(patient =>
+                    patient.userId.firstName.toLowerCase().includes(searchTerm) ||
+                    patient.userId.lastName.toLowerCase().includes(searchTerm) ||
+                    patient.userId.email.toLowerCase().includes(searchTerm)
+                );
+                displayPatients(filteredPatients); // Re-display filtered patients
+            });
+
+            document.getElementById('addImprovementForm').addEventListener('submit', handleAddImprovement);
+        }
+
+        function setupPatientTabs() {
+            document.querySelectorAll('.patient-tabs .tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and content
+                    document.querySelectorAll('.patient-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                    // Add active class to clicked button and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        async function showPatientDetail(patientId) {
+            try {
+                const patientResponse = await window.api.getPatient(patientId); // Assuming getPatient exists
+                const patientDetailsResponse = await window.api.getPatientDetails(patientId); // Assuming getPatientDetails exists
+                const patientAppointmentsResponse = await window.api.getPatientAppointments({ patientId: patientId, limit: 10 }); // Assuming getPatientAppointments can filter by patientId
+
+                if (patientResponse.success && patientDetailsResponse.success && patientAppointmentsResponse.success) {
+                    selectedPatient = patientResponse.data.data; // Access data.data
+                    const patientDetail = patientDetailsResponse.data.data; // Access data.data
+                    const patientAppointments = patientAppointmentsResponse.data.appointments;
+
+                    document.getElementById('patientDetailName').textContent = `${selectedPatient.userId.firstName} ${selectedPatient.userId.lastName}`;
+                    document.getElementById('detailPatientName').textContent = `${selectedPatient.userId.firstName} ${selectedPatient.userId.lastName}`;
+                    document.getElementById('detailPatientEmail').textContent = selectedPatient.userId.email;
+                    document.getElementById('detailPatientPhone').textContent = selectedPatient.userId.phone || 'N/A';
+                    document.getElementById('detailPatientDOB').textContent = patientDetail.personalInfo?.dateOfBirth ? new Date(patientDetail.personalInfo.dateOfBirth).toLocaleDateString() : 'N/A';
+                    document.getElementById('detailPatientGender').textContent = patientDetail.personalInfo?.gender || 'N/A';
+                    const address = patientDetail.personalInfo?.address;
+                    document.getElementById('detailPatientAddress').textContent = address ? `${address.street}, ${address.city}, ${address.state} ${address.zipCode}, ${address.country}` : 'N/A';
+
+                    // Medical History
+                    document.getElementById('detailAllergies').textContent = patientDetail.medicalHistory?.allergies?.join(', ') || 'None';
+                    document.getElementById('detailMedications').textContent = patientDetail.medicalHistory?.currentMedications?.join(', ') || 'None';
+                    document.getElementById('detailConditions').textContent = patientDetail.medicalHistory?.chronicConditions?.join(', ') || 'None';
+                    document.getElementById('detailFamilyHistory').textContent = patientDetail.medicalHistory?.familyHistory?.join(', ') || 'None';
+
+                    // Patient Appointments
+                    const patientAppointmentsList = document.getElementById('patientAppointmentsList');
+                    patientAppointmentsList.innerHTML = '';
+                    if (patientAppointments.length === 0) {
+                        patientAppointmentsList.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No appointments for this patient.</p>';
+                    } else {
+                        patientAppointments.forEach(appointment => {
+                            const apptElement = document.createElement('div');
+                            apptElement.className = 'schedule-item';
+                            apptElement.innerHTML = `
+                                <div>
+                                    <div class="schedule-time">${new Date(appointment.scheduledDate).toLocaleDateString()} - ${appointment.startTime} to ${appointment.endTime}</div>
+                                    <div class="schedule-details">${appointment.therapyType} - Status: ${appointment.status}</div>
+                                </div>
+                                <div class="schedule-actions">
+                                    <button class="btn-small btn-edit" onclick="showImprovementForm('${appointment._id}')">Add Improvement</button>
+                                </div>
+                            `;
+                            patientAppointmentsList.appendChild(apptElement);
+                        });
+                    }
+
+                    // Patient Progress & Notes
+                    const patientProgressSection = document.getElementById('patientProgressSection');
+                    patientProgressSection.innerHTML = '';
+                    if (patientDetail.improvements && patientDetail.improvements.length > 0) {
+                        patientDetail.improvements.forEach(imp => {
+                            const impElement = document.createElement('div');
+                            impElement.className = 'progress-item';
+                            impElement.innerHTML = `
+                                <h4>${imp.title} (${imp.improvementPercentage}% Improvement)</h4>
+                                <p>${imp.description}</p>
+                                <p><em>Measurement Type: ${imp.measurementType}</em></p>
+                                <p>Notes: ${imp.notes || 'N/A'}</p>
+                                <span class="progress-date">Recorded: ${new Date(imp.recordedDate).toLocaleDateString()}</span>
+                            `;
+                            patientProgressSection.appendChild(impElement);
+                        });
+                    } else {
+                        patientProgressSection.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No improvement records yet.</p>';
+                    }
+
+                    document.getElementById('improvementPatientId').value = selectedPatient._id; // Set patient ID for improvement form
+                    document.getElementById('patientDetailSection').style.display = 'block';
+                } else {
+                    window.PanchakarmaPro.showNotification('Failed to load patient details.', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading patient details:', error);
+                window.PanchakarmaPro.showNotification('Error loading patient details.', 'error');
+            }
+        }
+
+        function hidePatientDetail() {
+            document.getElementById('patientDetailSection').style.display = 'none';
+            selectedPatient = null;
+        }
+
+        async function handleAddImprovement(event) {
+            event.preventDefault();
+            const patientId = document.getElementById('improvementPatientId').value;
+            const improvementData = {
+                problemId: 'N/A', // This needs to be linked to a specific problem if available
+                title: document.getElementById('improvementTitle').value,
+                description: document.getElementById('improvementDescription').value,
+                improvementPercentage: parseInt(document.getElementById('improvementPercentage').value),
+                measurementType: document.getElementById('measurementType').value,
+                notes: document.getElementById('improvementNotes').value,
+                recordedBy: user._id // Practitioner's user ID
+            };
+
+            try {
+                const response = await window.api.addPatientImprovement(patientId, improvementData);
+                if (response.success) {
+                    window.PanchakarmaPro.showNotification('Improvement added successfully!', 'success');
+                    document.getElementById('addImprovementForm').reset();
+                    showPatientDetail(patientId); // Refresh patient details
+                } else {
+                    window.PanchakarmaPro.showNotification(response.message || 'Failed to add improvement.', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding improvement:', error);
+                window.PanchakarmaPro.showNotification('Error adding improvement.', 'error');
+            }
+        }
+
+        // Use the global logout function from auth-guard.js
+        function logout() {
+            window.authGuard.confirmLogout();
+        }
+
+        // Auto-refresh dashboard every 5 minutes
+        setInterval(() => {
+            loadDashboardData();
+        }, 300000);
+    </script>
+</body>
+</html>
